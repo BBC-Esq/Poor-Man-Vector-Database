@@ -11,7 +11,9 @@ Works surprisingly well though. 😄 Enjoy!
 ### Instructions:
 
 1. Download the .exe and simply click to run.
-2. Install and get running LM Studio. Activate server mode. Make sure that the server information is listening on: `http://localhost:1234/v1` otherwise you'll have to modify "chat.py" accordingly.
-3. If you don't use the .exe, you can simply run "gui.py."
+2. Install and get running LM Studio
+3. Activate server mode and make sure that the server information is listening on: `http://localhost:1234/v1` otherwise you'll have to modify "chat.py" accordingly.
+
+You can also just run gui.py instead of using the .exe but then you have to worry about installing dependencies."
 
 Thanks for stopping by.
