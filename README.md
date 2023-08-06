@@ -1,12 +1,10 @@
 ## Introduction
 
-Works specifically with LM Studio, so check it out and join the Discord channel as well!
+Works specifically with [LM Studio](https://github.com/lmstudio-ai), so check it out and join the Discord channel as well!
 
 I call this "POOR MAN'S" chatting with documents because it's not a vector database, it's not a normal database, it's not whatever the heck the Faiss library is...no...not even close. It's actually simply extracting text from a document (only pdf, docx, and txt though), cleaning it a little (but not very well), and attaching to your query.
 
 Works surprisingly well though. 😄 Enjoy!
-
-P.S. - Anxiously awaiting Yag's implementation!
 
 ### Instructions:
 
