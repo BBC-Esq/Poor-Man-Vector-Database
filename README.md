@@ -1,16 +1,37 @@
-## Introduction
+# Poor Man's Vector Database
 
-Works specifically with [LM Studio](https://github.com/lmstudio-ai), so check it out and join the Discord channel as well!
+Works specifically with [LM Studio](https://github.com/lmstudio-ai).  It's not a normal database.  I simply extracts text from a document (only pdf, docx, and txt though), cleans it a little and send you query and the text extracted to LM Studio for an answer.
 
-I call this "POOR MAN'S" chatting with documents because it's not a vector database, it's not a normal database, it's not whatever the heck the Faiss library is...no...not even close. It's actually simply extracting text from a document (only pdf, docx, and txt though), cleaning it a little (but not very well), and attaching to your query.
+Download the repo files.
 
-Works surprisingly well though. 😄 Enjoy!
+* Create virtual environment
+```
+python -m venv .
+```
 
-### Instructions:
+* Activate Virtual Environment
+```
+.\Scripts\activate
+```
 
-2. Install and get running LM Studio. Activate server mode. Make sure that the server information is listening on: `http://localhost:1234/v1` otherwise you'll have to modify "chat.py" accordingly.
+* Upgrade Pip
+```
+python -m pip install --upgrade pip
+```
 
-Thanks for stopping by.
+* Install Requirements
+```
+pip install -r requirements.txt
+```
+
+* Run program
+```
+python gui.py
+```
+
+# Contact
+
+All suggestions (positive and negative) are welcome.  "bbc@chintellalaw.com" or feel free to message me on the [LM Studio Discord Server](https://discord.gg/aPQfnNkxGC).
 
 ### Screenshots:
 
