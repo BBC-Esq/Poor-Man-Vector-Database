@@ -1,6 +1,6 @@
 # Poor Man's Vector Database
 
-Works specifically with [LM Studio](https://github.com/lmstudio-ai).  It's not a normal database.  I simply extracts text from a document (only pdf, docx, and txt though), cleans it a little and send you query and the text extracted to LM Studio for an answer.
+Works specifically with [LM Studio](https://github.com/lmstudio-ai).  It simply extracts text from a document (only pdf, docx, and txt though), cleans it a little and send you query and the text extracted to LM Studio for an answer.
 
 Download the repo files.
 
