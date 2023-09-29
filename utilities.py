@@ -1,5 +1,5 @@
 import re
-import fitz  # PyMuPDF
+import fitz
 from docx import Document
 from nltk.tokenize import sent_tokenize
 
@@ -25,21 +25,16 @@ class TextUtilities:
         return text
 
     def clean_text(self, text):
-        # Remove non-utf-8 encodable characters
         text = text.encode('utf-8', 'ignore').decode('utf-8')
         
-        # Remove newlines
         text = text.replace('\n', ' ')
         
-        # Tokenize the text into sentences
         sentences = sent_tokenize(text)
         
-        # Join the sentences into a single string with proper spacing
         cleaned_text = ' '.join(sentences)
         
         return cleaned_text
 
-# Main function
 def process_file(file_path):
     utilities = TextUtilities()
     text = ""
@@ -50,7 +45,6 @@ def process_file(file_path):
     elif file_path.lower().endswith('.txt'):
         text = utilities.txt_to_text(file_path)
 
-    # Cleaning the text
     text = utilities.clean_text(text)
 
     return text

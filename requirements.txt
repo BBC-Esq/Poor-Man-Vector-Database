@@ -1,0 +1,4 @@
+PyMuPDF==1.23.4
+python-docx==0.8.11
+nltk==3.8.1
+openai==0.28.1

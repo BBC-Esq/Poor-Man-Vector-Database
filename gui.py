@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 import utilities
-import chat  # Importing the chat module
+import chat
 
 class DocQA_GUI:
     def __init__(self, root):
@@ -48,14 +48,14 @@ class DocQA_GUI:
         self.read_only_text.config(yscrollcommand=scroll2.set)
 
     def choose_document(self):
-        file_types = [("Documents", "*.pdf *.docx *.txt *.doc *.rtf"), ("All Files", "*.*")]
+        file_types = [("Documents", "*.pdf *.docx *.txt *.doc *.py *.rtf"), ("All Files", "*.*")]
         file_path = filedialog.askopenfilename(initialdir=self.last_dir, filetypes=file_types)
         if file_path:
             self.last_dir = file_path.rsplit('/', 1)[0]
             self.file_path.set(file_path)
             self.cleaned_text = utilities.process_file(file_path)
 
-    def clear_prompt(self): # Added this method
+    def clear_prompt(self):
         self.text_input.delete("1.0", tk.END)
 
     def clear_placeholder(self, event=None):
@@ -68,20 +68,16 @@ class DocQA_GUI:
 
     def send_prompt_to_llm(self):
         if self.cleaned_text:
-            # Get the prompt from the text input box
             user_prompt = self.text_input.get("1.0", tk.END).strip()
             
-            # Prepend the cleaned text to the user prompt
             full_text = user_prompt + " " + self.cleaned_text
             
-            # Send the full text to the get_completion function from the chat module
             response = chat.get_completion(full_text)
 
-            # Display the response in the read-only Text widget
-            self.read_only_text.config(state=tk.NORMAL)  # Enable editing temporarily
-            self.read_only_text.delete("1.0", tk.END)    # Clear existing text
-            self.read_only_text.insert(tk.END, response) # Insert the response
-            self.read_only_text.config(state=tk.DISABLED) # Disable editing again
+            self.read_only_text.config(state=tk.NORMAL)
+            self.read_only_text.delete("1.0", tk.END)
+            self.read_only_text.insert(tk.END, response)
+            self.read_only_text.config(state=tk.DISABLED)
 
 if __name__ == "__main__":
     root = tk.Tk()
