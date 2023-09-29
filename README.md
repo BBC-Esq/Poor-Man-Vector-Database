@@ -8,7 +8,6 @@ Works surprisingly well though. 😄 Enjoy!
 
 ### Instructions:
 
-1. Download the .exe and simply click to run.
 2. Install and get running LM Studio. Activate server mode. Make sure that the server information is listening on: `http://localhost:1234/v1` otherwise you'll have to modify "chat.py" accordingly.
 
 Thanks for stopping by.
