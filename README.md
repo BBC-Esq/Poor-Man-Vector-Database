@@ -4,15 +4,16 @@ Works specifically with [LM Studio](https://github.com/lmstudio-ai).  It simply 
 
 * Download the repo files.
 
-* Create virtual environment
+* Within the repository folder, open a command prompt and create a virtual environment
 ```
 python -m venv .
 ```
 
-* Activate Virtual Environment
+* Activate virtual environment
 ```
 .\Scripts\activate
 ```
+> On Linux or macOS, run source bin/activate ```source bin/activate```
 
 * Upgrade Pip
 ```
