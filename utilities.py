@@ -26,13 +26,9 @@ class TextUtilities:
 
     def clean_text(self, text):
         text = text.encode('utf-8', 'ignore').decode('utf-8')
-        
         text = text.replace('\n', ' ')
-        
         sentences = sent_tokenize(text)
-        
         cleaned_text = ' '.join(sentences)
-        
         return cleaned_text
 
 def process_file(file_path):

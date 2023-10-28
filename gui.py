@@ -1,87 +1,85 @@
-import tkinter as tk
-from tkinter import filedialog
+from PySide6.QtCore import Qt, QRect, QPoint
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QTextEdit, QFileDialog
+from PySide6.QtGui import QScreen, QFont
 import utilities
 import chat
 
-class DocQA_GUI:
-    def __init__(self, root):
+class DocQA_GUI(QWidget):
+    def __init__(self):
+        super(DocQA_GUI, self).__init__()
+
+        # Center GUI
+        screen_geom = QApplication.screens()[0].availableGeometry()
+        start_x = (screen_geom.width() - 800) // 2
+        start_y = (screen_geom.height() - 600) // 2
+        self.setGeometry(QRect(QPoint(start_x, start_y), QPoint(start_x + 800, start_y + 600)))
+
+        self.setWindowTitle("Poor Man's Vector Database - www.chintellalaw.com")
+        self.setStyleSheet("QMainWindow{background-color: darkgray;}")
+
         self.last_dir = None
-        self.file_path = tk.StringVar()
         self.cleaned_text = None
 
-        # Top Section: Document Selection and Actions
-        top_frame = tk.Frame(root)
-        top_frame.pack(pady=5)
+        layout = QVBoxLayout()
 
-        tk.Button(top_frame, text="Choose Document", command=self.choose_document, width=16).pack(side=tk.LEFT, padx=5)
-        tk.Button(top_frame, text="Send Prompt to LLM", command=self.send_prompt_to_llm, width=16).pack(side=tk.LEFT, padx=5)
-        tk.Button(top_frame, text="Clear", command=self.clear_prompt, width=16).pack(side=tk.LEFT, padx=5) # Added command
+        # Display path and file name
+        self.file_path_label = QLabel()
+        layout.addWidget(self.file_path_label)
 
-        # Displaying the full path and file name
-        file_path_frame = tk.Frame(root)
-        file_path_frame.pack(pady=1)
-        tk.Label(file_path_frame, textvariable=self.file_path).pack(side=tk.LEFT, padx=1)
+        # Query
+        self.text_input = QTextEdit()
+        font_input = QFont()
+        font_input.setPointSize(13)
+        self.text_input.setFont(font_input)
+        self.text_input.setStyleSheet("background-color: #2e333b; color: white;")
+        layout.addWidget(self.text_input, 1)
 
-        # Middle Section: Text Input and Control
-        middle_frame = tk.Frame(root)
-        middle_frame.pack(pady=5)
+        # LLM Response
+        self.read_only_text = QTextEdit()
+        self.read_only_text.setReadOnly(True)
+        font_output = QFont()
+        font_output.setPointSize(13)
+        self.read_only_text.setFont(font_output)
+        self.read_only_text.setStyleSheet("background-color: #092327; color: white;")
+        layout.addWidget(self.read_only_text, 2)
 
-        self.text_input = tk.Text(middle_frame, wrap=tk.WORD, height=5)
-        self.text_input.pack(side=tk.LEFT, fill=tk.BOTH)
-        self.text_input.insert(tk.END, 'Enter prompt here...')
-        self.text_input.bind("<FocusIn>", self.clear_placeholder)
-        self.text_input.bind("<FocusOut>", self.add_placeholder)
+        # Buttons
+        bottom_layout = QHBoxLayout()
+        btn_choose_document = QPushButton("Choose Document")
+        btn_choose_document.clicked.connect(self.choose_document)
+        btn_send_prompt = QPushButton("Send Prompt to LLM")
+        btn_send_prompt.clicked.connect(self.send_prompt_to_llm)
+        btn_clear = QPushButton("Clear Prompt")
+        btn_clear.clicked.connect(self.clear_prompt)
 
-        scroll1 = tk.Scrollbar(middle_frame, command=self.text_input.yview)
-        scroll1.pack(side=tk.LEFT, fill=tk.Y)
-        self.text_input.config(yscrollcommand=scroll1.set)
+        bottom_layout.addWidget(btn_choose_document)
+        bottom_layout.addWidget(btn_send_prompt)
+        bottom_layout.addWidget(btn_clear)
+        layout.addLayout(bottom_layout)
 
-        # Bottom Section: Text Output and Actions
-        bottom_frame = tk.Frame(root)
-        bottom_frame.pack(pady=5)
-
-        self.read_only_text = tk.Text(bottom_frame, wrap=tk.WORD, state=tk.DISABLED, height=20)
-        self.read_only_text.pack(side=tk.LEFT, fill=tk.BOTH)
-
-        scroll2 = tk.Scrollbar(bottom_frame, command=self.read_only_text.yview)
-        scroll2.pack(side=tk.LEFT, fill=tk.Y)
-        self.read_only_text.config(yscrollcommand=scroll2.set)
+        self.setLayout(layout)
 
     def choose_document(self):
-        file_types = [("Documents", "*.pdf *.docx *.txt *.doc *.py *.rtf"), ("All Files", "*.*")]
-        file_path = filedialog.askopenfilename(initialdir=self.last_dir, filetypes=file_types)
+        file_types = "Documents (*.pdf *.docx *.txt *.doc *.py *.rtf);;All Files (*)"
+        file_path, _ = QFileDialog.getOpenFileName(self, "Choose Document", self.last_dir, file_types)
         if file_path:
-            self.last_dir = file_path.rsplit('/', 1)[0]
-            self.file_path.set(file_path)
+            self.last_dir = '/'.join(file_path.split('/')[:-1])
+            self.file_path_label.setText(file_path)
             self.cleaned_text = utilities.process_file(file_path)
 
     def clear_prompt(self):
-        self.text_input.delete("1.0", tk.END)
-
-    def clear_placeholder(self, event=None):
-        if self.text_input.get("1.0", tk.END).strip() == 'Enter prompt here...':
-            self.text_input.delete("1.0", tk.END)
-
-    def add_placeholder(self, event=None):
-        if not self.text_input.get("1.0", tk.END).strip():
-            self.text_input.insert(tk.END, 'Enter prompt here...')
+        self.text_input.clear()
 
     def send_prompt_to_llm(self):
         if self.cleaned_text:
-            user_prompt = self.text_input.get("1.0", tk.END).strip()
-            
+            user_prompt = self.text_input.toPlainText().strip()
             full_text = user_prompt + " " + self.cleaned_text
-            
             response = chat.get_completion(full_text)
-
-            self.read_only_text.config(state=tk.NORMAL)
-            self.read_only_text.delete("1.0", tk.END)
-            self.read_only_text.insert(tk.END, response)
-            self.read_only_text.config(state=tk.DISABLED)
+            self.read_only_text.setText(response)
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    root.title("DocQA GUI")
-    root.geometry("800x600")
-    app = DocQA_GUI(root)
-    root.mainloop()
+    app = QApplication([])
+    app.setStyle('Fusion')
+    window = DocQA_GUI()
+    window.show()
+    app.exec()
