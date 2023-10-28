@@ -43,5 +43,4 @@ All suggestions (positive and negative) are welcome.  "bbc@chintellalaw.com" or 
 
 ### Screenshots:
 
-![Screenshot 1](https://github.com/BBC-Esq/Chat_Doc_LM_Studio/raw/main/esq1.png)
-![Screenshot 2](https://github.com/BBC-Esq/Chat_Doc_LM_Studio/raw/main/esq2.png)
+![Screenshot 1](https://github.com/BBC-Esq/Poor-Man-Vector-Database/blob/main/screenshot.png)
