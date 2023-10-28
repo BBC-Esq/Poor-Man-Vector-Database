@@ -1,34 +1,41 @@
-# Poor Man's Vector Database
+# [LM Studio](https://github.com/lmstudio-ai) Poor Man's Vector Database
 
-Works specifically with [LM Studio](https://github.com/lmstudio-ai).  It simply extracts text from a document (only pdf, docx, and txt though), cleans it a little and send you query and the text extracted to LM Studio for an answer.  This simulates a vector database, but in reality just appends all of the extracted text to a user's query and sends both to the LLM for a response.
+### Extracts text from a document (pdf, docx, and txt), curates it, and asks LM Studio about it, simulating a vector database.
 
-* Download the repo files.
+## Installation
+> ‼️ Make sure to have 🐍[Python 3.10](https://www.python.org/downloads/release/python-31011/) (haven't tested higher).  Also, you must have both [Git](https://git-scm.com/downloads) and [git-lfs](https://git-lfs.com/) installed.<br>
+> ‼️ For any commands that begin with ```python``` or ```pip``` in these instructions, if you installed Python 3 but still have Python 2 installed, you should use ```Python3``` or ```pip3``` instead to make sure that the correct version of Python is used.
 
-* Within the repository folder, open a command prompt and create a virtual environment
+Step 1 - Download the repo files in the latest release.
+
+Step 2 - Open a command prompt in the folder with ```gui.py``` and create a virtual environment:
 ```
 python -m venv .
 ```
 
-* Activate virtual environment
+Step 3 - Activate virtual environment
+  > On Linux or MacOS, run source bin/activate ```source bin/activate``` instead.
 ```
 .\Scripts\activate
 ```
-> On Linux or macOS, run source bin/activate ```source bin/activate```
 
-* Upgrade Pip
+Step 4 - Upgrade Pip
 ```
 python -m pip install --upgrade pip
 ```
 
-* Install Requirements
+Step 5 - Install Requirements
 ```
 pip install -r requirements.txt
 ```
 
-* Run program
+## Usage
+
+Within the virtual environment run:
 ```
 python gui.py
 ```
+> ‼️ Don't forget to activate the virtual environment in the proper folder each time you want to use it.
 
 # Contact
 
