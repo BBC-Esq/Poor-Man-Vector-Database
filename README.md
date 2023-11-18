@@ -1,14 +1,13 @@
 # [LM Studio](https://github.com/lmstudio-ai) Poor Man's Vector Database
 
-### Extracts text from a document (pdf, docx, and txt), curates it, and asks LM Studio about it, simulating a vector database.
+### Extracts text from a document (pdf, docx, txt, py, html, md), and asks LM Studio about it, simulating a vector database.
 
 ## Installation
-> ‼️ Make sure to have 🐍[Python 3.10](https://www.python.org/downloads/release/python-31011/) (haven't tested higher).  Also, you must have both [Git](https://git-scm.com/downloads) and [git-lfs](https://git-lfs.com/) installed.<br>
-> ‼️ For any commands that begin with ```python``` or ```pip``` in these instructions, if you installed Python 3 but still have Python 2 installed, you should use ```Python3``` or ```pip3``` instead to make sure that the correct version of Python is used.
+> ‼️ I have only tested it with 🐍[Python 3.10](https://www.python.org/downloads/release/python-31011/) or [Python 3.11](https://www.python.org/downloads/release/python-3116/) (I have not tested above 3.11.).
 
 Step 1 - Download the repo files in the latest release.
 
-Step 2 - Open a command prompt in the folder with ```gui.py``` and create a virtual environment:
+Step 2 - Open a command prompt in the folder that contains ```gui.py``` and create a virtual environment:
 ```
 python -m venv .
 ```
