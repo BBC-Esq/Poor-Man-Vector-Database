@@ -32,7 +32,7 @@ pip install -r requirements.txt
 
 Within the virtual environment run:
 ```
-python gui.py
+python main.py
 ```
 > ‼️ Don't forget to activate the virtual environment in the proper folder each time you want to use it.
 
