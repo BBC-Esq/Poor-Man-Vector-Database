@@ -7,7 +7,7 @@
 
 Step 1 - Download the repo files in the latest release.
 
-Step 2 - Open a command prompt in the folder that contains ```gui.py``` and create a virtual environment:
+Step 2 - Open a command prompt in the folder that contains ```main.py``` and create a virtual environment:
 ```
 python -m venv .
 ```
