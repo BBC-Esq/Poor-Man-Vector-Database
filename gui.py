@@ -5,11 +5,10 @@ from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
 from PySide6.QtGui import QFont
 from PySide6.QtWebEngineWidgets import QWebEngineView
 import markdown
-import json
-import subprocess
 from pypdf import PdfReader
 from docx import Document
 from nltk.tokenize import sent_tokenize
+from openai import OpenAI
 
 class TextUtilities:
     def __init__(self):
@@ -54,32 +53,23 @@ def process_file(file_path):
 def get_completion(prompt, temperature=0.0, max_tokens=-1, prefix="[INST]", suffix="[/INST]"):
     formatted_prompt = f"{prefix}{prompt}{suffix}"
 
-    data = {
-        "messages": [{"role": "user", "content": formatted_prompt}],
-        "stop": ["### Instruction:"],
-        "temperature": temperature,
-        "max_tokens": max_tokens,
-        "stream": False
-    }
+    client = OpenAI(base_url="http://localhost:1234/v1", api_key="not-needed")
 
-    curl_command = [
-        'curl',
-        'http://localhost:1234/v1/chat/completions',
-        '-H', 'Content-Type: application/json',
-        '-d', json.dumps(data)
-    ]
+    stream = client.chat.completions.create(
+        model="local-model",
+        messages=[{"role": "user", "content": formatted_prompt}],
+        temperature=temperature,
+        max_tokens=max_tokens,
+        stream=True
+    )
 
-    process = subprocess.Popen(curl_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-
-    if process.returncode == 0:
-        response = json.loads(stdout)
-        return response['choices'][0]['message']['content']
-    else:
-        raise Exception(f"Curl command failed with error: {stderr}")
+    for chunk in stream:
+        if chunk.choices[0].delta.content is not None:
+            yield chunk.choices[0].delta.content
 
 class LLMWorker(QThread):
-    finished = Signal(str)
+    chunk_received = Signal(str)
+    finished = Signal()
 
     def __init__(self, prompt):
         super().__init__()
@@ -87,10 +77,12 @@ class LLMWorker(QThread):
 
     def run(self):
         try:
-            response = get_completion(self.prompt)
-            self.finished.emit(response)
+            for chunk in get_completion(self.prompt):
+                self.chunk_received.emit(chunk)
+            self.finished.emit()
         except Exception as e:
-            self.finished.emit(f"Error: {str(e)}")
+            self.chunk_received.emit(f"Error: {str(e)}")
+            self.finished.emit()
 
 class DocQA_GUI(QWidget):
     def __init__(self):
@@ -107,7 +99,7 @@ class DocQA_GUI(QWidget):
 
         self.last_dir = None
         self.cleaned_text = None
-        self.llm_response = None
+        self.llm_response = ""
 
         layout = QVBoxLayout()
 
@@ -176,13 +168,17 @@ class DocQA_GUI(QWidget):
             full_text = user_prompt + " " + self.cleaned_text
             self.btn_send_prompt.setEnabled(False)
             self.btn_send_prompt.setText("Processing...")
+            self.llm_response = ""  # Reset the response
             self.worker = LLMWorker(full_text)
-            self.worker.finished.connect(self.handle_llm_response)
+            self.worker.chunk_received.connect(self.handle_llm_chunk)
+            self.worker.finished.connect(self.handle_llm_finished)
             self.worker.start()
 
-    def handle_llm_response(self, response):
-        self.llm_response = response
+    def handle_llm_chunk(self, chunk):
+        self.llm_response += chunk
         self.update_display()
+
+    def handle_llm_finished(self):
         self.btn_send_prompt.setEnabled(True)
         self.btn_send_prompt.setText("Send Prompt to LLM")
 
@@ -219,3 +215,10 @@ class DocQA_GUI(QWidget):
                 self.web_view.setHtml(styled_html)
                 self.web_view.show()
                 self.text_view.hide()
+
+if __name__ == "__main__":
+    import sys
+    app = QApplication(sys.argv)
+    window = DocQA_GUI()
+    window.show()
+    sys.exit(app.exec())
